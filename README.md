@@ -1,4 +1,4 @@
-config.json :
+src/config.json :
 ```
 {
     "token": "12345",
