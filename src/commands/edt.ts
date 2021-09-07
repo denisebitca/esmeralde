@@ -40,9 +40,9 @@ function getEDTLink(name : string | number) : string{
 		if(typeof(name) === "string"){
 			let pos = groupeNum[name];
     		let code = groupeCode[pos[0]][pos[1]];
-    		return "https://edt.iut-orsay.fr/vue_invite_horizontale.php?current_year=" + year + "&current_week=" + week + "&selec_groupe=27785342&groupes_multi%5B%5D=" + code + "&lar=1920&hau=1080"
+    		return "https://edt.iut-orsay.fr/vue_invite_horizontale.php?current_year=" + year + "&current_week=" + week + "&selec_groupe=27785342&groupes_multi%5B%5D=" + code + "&lar=1920&hau=1200"
 		} else if(typeof(name) === "number"){
-			return "https://edt.iut-orsay.fr/vue_etudiant_horizontale.php?current_year=" + year + "&current_student=" + name + "&current_week=" + week + "&lar=1920&hau=1080"
+			return "https://edt.iut-orsay.fr/vue_etudiant_horizontale.php?current_year=" + year + "&current_student=" + name + "&current_week=" + week + "&lar=1920&hau=1200"
 		}
 	}
 	return "???"
@@ -75,3 +75,5 @@ let obj : Command = {
         return interaction.reply(`Ara ara~, je ne marche pas en dehors de mon beau salon... Essaie plutôt le salon edt de ton groupe !`);
 	},
 };
+
+module.exports = obj;
