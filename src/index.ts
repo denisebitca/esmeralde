@@ -43,10 +43,14 @@ for (const file of commandFiles) {
 
 (async () => {
 	try {
-		await rest.put(
-			Routes.applicationCommands(config.CLIENTID),
-			{ body: commands },
-		);
+		for(var element of config.GUILDID){
+			await rest.put(
+				Routes.applicationGuildCommands(config.CLIENTID, element),
+				{ body: commands },
+			);
+
+			console.log('Registered for guild ' + element);
+		}
 
 		console.log('Successfully registered application commands.');
 	} catch (error) {
