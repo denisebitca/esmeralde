@@ -63,8 +63,7 @@ export class FollowupFunctions{
             //@ts-ignore
             "userList": config.userList.length === 0 ? [newUser] : config.userList.concat([newUser])
         }
-        console.log(path.join(__dirname, "config.json"));
-        fs.writeFileSync("./config.json", JSON.stringify(configCopy, null, 2), {encoding: "utf-8"});
+        fs.writeFileSync(path.join(__dirname, "config.json"), JSON.stringify(configCopy, null, 2), {encoding: "utf-8"});
         fs.rmSync(path.join(__dirname, interaction.user.id + ".json"));
         await interaction.update({content: "Ton emploi du temps a été enregistré !", embeds: [], components: []});
     }
