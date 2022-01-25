@@ -14,7 +14,7 @@ let obj : Command = {
         if(config.userList.filter(user => user.id === interaction.user.id).length === 1){
             //@ts-ignore
             config.userList = config.userList.filter(user => user.id !== interaction.user.id);
-            await fs.promises.writeFile(path.join(__dirname, "../config.json"), JSON.stringify(config, null, 2));
+            fs.writeFileSync(path.join(__dirname, "../config.json"), JSON.stringify(config, null, 2));
             return interaction.reply({content:"Tu as bien supprimé ton emploi du temps.", ephemeral: true});
         } else {
             return interaction.reply({content: "Tu n'es pas dans la liste des utilisateurs qui ont configuré leur emploi du temps.", ephemeral: true});
