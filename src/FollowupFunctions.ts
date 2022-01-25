@@ -7,7 +7,7 @@ import * as Discord from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 import { Group, userInfo, Crawler, SubGroup } from './Crawler';
-import * as config from './config.json'
+var config = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8"));
 
 export class FollowupFunctions{
     public static async followUpActionMenu1_edt(interaction: Discord.SelectMenuInteraction){
@@ -63,7 +63,8 @@ export class FollowupFunctions{
             //@ts-ignore
             "userList": config.userList.length === 0 ? [newUser] : config.userList.concat([newUser])
         }
-        await fs.promises.writeFile(path.join(__dirname, "config.json"), JSON.stringify(configCopy, null, 2));
+        console.log(path.join(__dirname, "config.json"));
+        await fs.promises.writeFile("./config.json", JSON.stringify(configCopy, null, 2), {encoding: "utf-8"});
         await fs.promises.rm(path.join(__dirname, interaction.user.id + ".json"));
         await interaction.update({content: "Ton emploi du temps a été enregistré !", embeds: [], components: []});
     }
