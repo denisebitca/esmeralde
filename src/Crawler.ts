@@ -1,25 +1,20 @@
 import cheerio, { CheerioAPI } from 'cheerio';
 import https from 'https';
-import { Snowflake } from 'discord.js';
-
-var groups : Group[] = [];
-var crawler : Crawler;
-var $ : CheerioAPI;
 
 export interface userInfo {
-    id: Snowflake;
-    group: Group;
-    subGroup: SubGroup;
+    id: string;
+    group: string;
+    subgroup: string;
 }
 
 export interface Group {
     name: string;
-    id: number;
+    id: string;
 }
 
 export interface SubGroup {
     name: string;
-    id: number;
+    id: string;
 }
 
 export class Crawler{
@@ -28,9 +23,9 @@ export class Crawler{
         this.DOM = dom;
     }
 
-    public static async newCrawler() : Promise<Crawler>{
+    public static async newCrawler(url : string) : Promise<Crawler>{
         return new Promise((resolve, reject) => {
-            const req = https.get("https://edt.iut-orsay.fr/edt_invite.php", (res) => {
+            const req = https.get(url, (res) => {
                 let data = "";
                 res.on("data", (chunk) => {
                     data += chunk;
@@ -52,14 +47,14 @@ export class Crawler{
             if(this.DOM != null && this.DOM(elem).attr('value') != "TOUS"){
                 groups.push({
                     name: this.DOM(elem).text(),
-                    id: Number(this.DOM(elem).attr('value'))
+                    id: String(this.DOM(elem).attr('value'))
                 });
             }
         });
         return groups;
     }
 
-    public updateDOMUrl(group: Group, sub?: SubGroup) : string{
+    public static updateDOMUrl(group: Group, sub?: SubGroup) : string{
         let url = "https://edt.iut-orsay.fr/edt_invite.php?selec_groupe=" + group.id + "&hau=1000&lar=1500";
         if(sub != undefined){
             let url = "https://edt.iut-orsay.fr/edt_invite.php?selec_groupe=" + group.id + "&groupes_multi[]=" + sub.id + "&hau=1000&lar=1500";
@@ -77,7 +72,7 @@ export class Crawler{
             if(this.DOM != null && this.DOM(elem).attr('value') != "TOUS"){
                 subGroups.push({
                     name: this.DOM(elem).text(),
-                    id: Number(this.DOM(elem).attr('value'))
+                    id: String(this.DOM(elem).attr('value'))
                 });
             }
         });

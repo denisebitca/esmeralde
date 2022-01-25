@@ -1,13 +1,11 @@
-import {Crawler, Group, userInfo, SubGroup} from "../Crawler";
-import cheerio, {CheerioAPI} from "cheerio";
-import https from "https";
+import {Crawler, Group, SubGroup} from "../Crawler";
 import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, MessageSelectOptionData } from "discord.js";
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from '../index';
 import fs from 'fs';
-import config from '../config.json';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
+import path from "path";
 dayjs.extend(weekOfYear);
 
 function edtLink(subGroupId?: SubGroup["id"]) : string{
@@ -33,15 +31,18 @@ let obj : Command = {
 		.setDescription('Trouver ton emploi du temps ou l`emploi du temps de ton groupe.')
 		.addIntegerOption(option => option.setName('id-etudiant').setDescription('l`identifiant de l`étudiant')),
 	async execute(interaction : CommandInteraction) {
-        if(config.userList.filter((user : userInfo) => user.id === interaction.user.id).length === 0){
-            config.userList.forEach((user : userInfo) => {
-                if(user.id === interaction.user.id){
-                   return interaction.reply(edtLink(user.subGroup.id));
-                }
-            });
+
+        var config = JSON.parse(fs.readFileSync(path.join(__dirname, "../config.json"), {encoding: "utf-8"}));
+
+        //@ts-ignore
+        let presenceCheck = config.userList.filter(user => user.id === interaction.user.id);
+        if(presenceCheck.length === 1){
+            //@ts-ignore
+            return interaction.reply(edtLink(JSON.parse(presenceCheck[0].subgroup).id));
+
         }
 
-        let crawler = await Crawler.newCrawler();
+        let crawler = await Crawler.newCrawler("https://edt.iut-orsay.fr/edt_invite.php");
         let groups : Group[] = crawler.getGroups();
 
         if(groups.length > 0){
@@ -53,12 +54,12 @@ let obj : Command = {
                 if(options.length < 25){
                     options.push({
                         label: "Groupe " + group.name,
-                        value: String(group.id)
+                        value: String(group.name+"///"+group.id)
                     });
                 } else {
                     options2.push({
                         label: "Groupe " + group.name,
-                        value: String(group.id)
+                        value: String(group.name+"///"+group.id)
                     })
                 }
             });
@@ -68,7 +69,7 @@ let obj : Command = {
             .setTitle('Esmeralde')
             .setDescription('Je suis le bot EDT de l`IUT.\nPour commencer, tu dois selectionner ton groupe.\nPour cela, clique sur le bouton correspondant.');
 
-            row.addComponents(new MessageSelectMenu().setCustomId("select").setPlaceholder("Pas de groupe selectionné").addOptions(options).setMinValues(1).setMaxValues(1));
+            row.addComponents(new MessageSelectMenu().setCustomId("select").setPlaceholder("Pas de groupe selectionné dans la page 1").addOptions(options).setMinValues(1).setMaxValues(1));
 
             if(options2.length > 0){
                 const row2 = new MessageActionRow();

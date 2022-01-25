@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 //config
-import config from './config.json';
+var config = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8"));
 
 //discord
 import * as Discord from 'discord.js';
@@ -11,6 +11,9 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 const wait = require('util').promisify(setTimeout);
+
+//other
+import {FollowupFunctions} from './FollowupFunctions';
 
 export interface Command {
 	data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,
@@ -66,8 +69,10 @@ client.once('ready', () => {
 client.on('interactionCreate', async interaction => {
 	if (interaction.isSelectMenu()){
 		if (interaction.customId === 'select' || interaction.customId === 'select2') {
-			console.log(interaction.values[0]);
-			await interaction.update({content: "test", embeds: [], components: []});
+			FollowupFunctions.followUpActionMenu1_edt(interaction);
+		} else if (interaction.customId === 'select3') {
+			FollowupFunctions.followUpActionMenu2_edt(interaction);
+			config = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), {encoding: "utf-8"}));
 		}
     } else if(interaction.isCommand()){
         const command = client.commands.get(interaction.commandName);
