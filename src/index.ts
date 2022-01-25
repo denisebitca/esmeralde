@@ -71,7 +71,6 @@ client.on('interactionCreate', async interaction => {
 			FollowupFunctions.followUpActionMenu1_edt(interaction);
 		} else if (interaction.customId === 'select3') {
 			FollowupFunctions.followUpActionMenu2_edt(interaction);
-			config = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), {encoding: "utf-8"}));
 		}
     } else if(interaction.isCommand()){
         const command = client.commands.get(interaction.commandName);
