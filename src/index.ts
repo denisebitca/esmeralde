@@ -83,7 +83,7 @@ client.on('interactionCreate', async interaction => {
             await command.execute(interaction);
         } catch (error) {
             console.error(error);
-            return interaction.reply({ content: 'Kyaaaa !!! J`ai eu un petit souci, désowée >.<', ephemeral: true });
+            return interaction.reply({ content: 'Oups ! Il y a un problème ! Contacte denise#2798 ! ``code erreur 2``', ephemeral: true });
         }
     }
 });

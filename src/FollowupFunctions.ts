@@ -44,14 +44,14 @@ export class FollowupFunctions{
 
         const menu = new Discord.MessageSelectMenu();
         menu.setCustomId("select3");
-        menu.setPlaceholder("Choisis ton sous-groupe");
+        menu.setPlaceholder("Choisis ton groupe");
         menu.setOptions(options);
         menu.setMinValues(1);
         menu.setMaxValues(1);
 
         row.addComponents(menu);
 
-        await interaction.update({content: "Maintenant choisis ton sous-groupe !", components: [row]});
+        await interaction.update({content: "Maintenant choisis ton groupe !", embeds: [], components: [row]});
     }
     public static async followUpActionMenu2_edt(interaction: Discord.SelectMenuInteraction){
         let choiceList : userInfo[] = JSON.parse(fs.readFileSync(path.join(__dirname, interaction.user.id + ".json"), "utf8"));
@@ -64,7 +64,8 @@ export class FollowupFunctions{
             "userList": config.userList.length === 0 ? [newUser] : config.userList.concat([newUser])
         }
         await fs.promises.writeFile(path.join(__dirname, "config.json"), JSON.stringify(configCopy, null, 2));
-        await interaction.update({content: "Votre groupe a été enregistré !", components: []});
+        await fs.promises.rm(path.join(__dirname, interaction.user.id + ".json"));
+        await interaction.update({content: "Ton emploi du temps a été enregistré !", embeds: [], components: []});
     }
 
     public static async followUpNextPage(interaction: Discord.ButtonInteraction){

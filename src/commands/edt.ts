@@ -28,8 +28,7 @@ function edtLink(subGroupId?: SubGroup["id"]) : string{
 let obj : Command = {
 	data: new SlashCommandBuilder()
 		.setName('edt')
-		.setDescription('Trouver ton emploi du temps ou l`emploi du temps de ton groupe.')
-		.addIntegerOption(option => option.setName('id-etudiant').setDescription('l`identifiant de l`étudiant')),
+		.setDescription('Trouver ton emploi du temps ou l`emploi du temps de ton groupe.'),
 	async execute(interaction : CommandInteraction) {
 
         var config = JSON.parse(fs.readFileSync(path.join(__dirname, "../config.json"), {encoding: "utf-8"}));
@@ -38,7 +37,7 @@ let obj : Command = {
         let presenceCheck = config.userList.filter(user => user.id === interaction.user.id);
         if(presenceCheck.length === 1){
             //@ts-ignore
-            return interaction.reply(edtLink(JSON.parse(presenceCheck[0].subgroup).id));
+            return interaction.reply({content: edtLink(JSON.parse(presenceCheck[0].subgroup).id), ephemeral: true});
 
         }
 
@@ -66,20 +65,20 @@ let obj : Command = {
 
             const embed = new MessageEmbed()
             .setColor('#0099ff')
-            .setTitle('Esmeralde')
-            .setDescription('Je suis le bot EDT de l`IUT.\nPour commencer, tu dois selectionner ton groupe.\nPour cela, clique sur le bouton correspondant.');
+            .setTitle('Configuration de l\'emploi du temps')
+            .setDescription('Je suis le bot EDT de l`IUT.\nPour commencer, tu dois selectionner ta filière.\nPour cela, clique sur le premier menu, et si tu ne trouves pas ta filière, clique sur le deuxième menu.');
 
-            row.addComponents(new MessageSelectMenu().setCustomId("select").setPlaceholder("Pas de groupe selectionné dans la page 1").addOptions(options).setMinValues(1).setMaxValues(1));
+            row.addComponents(new MessageSelectMenu().setCustomId("select").setPlaceholder("Choisis ta filière (1)").addOptions(options).setMinValues(1).setMaxValues(1));
 
             if(options2.length > 0){
                 const row2 = new MessageActionRow();
-                row2.addComponents(new MessageSelectMenu().setCustomId("select2").setPlaceholder("Pas de groupe selectionné").addOptions(options2));
-                return interaction.reply({ content: 'Saluuuut uwu', ephemeral: true, embeds: [embed], components: [row, row2] });
+                row2.addComponents(new MessageSelectMenu().setCustomId("select2").setPlaceholder("Choisis ta filière (2)").addOptions(options2));
+                return interaction.reply({ content: 'Salut !', ephemeral: true, embeds: [embed], components: [row, row2] });
             }
             
-            return interaction.reply({ content: 'Saluuuut uwu', ephemeral: true, embeds: [embed], components: [row] });
+            return interaction.reply({ content: 'Salut !', ephemeral: true, embeds: [embed], components: [row] });
         } else {
-            return interaction.reply('Ouin, il y a un problème ! Contacte Denise !');
+            return interaction.reply({ content: 'Oups ! Il y a un problème ! Contacte denise#2798 !', ephemeral: true });
         }
 	},
 };
