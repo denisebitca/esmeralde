@@ -1,18 +1,49 @@
-import { CheerioAPI } from 'cheerio';
-interface Group {
+import cheerio, { CheerioAPI } from 'cheerio';
+import https from 'https';
+import { Snowflake } from 'discord.js';
+
+var groups : Group[] = [];
+var crawler : Crawler;
+var $ : CheerioAPI;
+
+export interface userInfo {
+    id: Snowflake;
+    group: Group;
+    subGroup: SubGroup;
+}
+
+export interface Group {
     name: string;
     id: number;
 }
 
-interface SubGroup {
+export interface SubGroup {
     name: string;
     id: number;
 }
 
-class Crawler{
+export class Crawler{
     private DOM: CheerioAPI
     constructor(dom: CheerioAPI){
         this.DOM = dom;
+    }
+
+    public static async newCrawler() : Promise<Crawler>{
+        return new Promise((resolve, reject) => {
+            const req = https.get("https://edt.iut-orsay.fr/edt_invite.php", (res) => {
+                let data = "";
+                res.on("data", (chunk) => {
+                    data += chunk;
+                });
+                res.on("end", () => {
+                    let $ = cheerio.load(data);
+                    resolve(new Crawler($));
+                });
+            });
+            req.on("error", (err) => {
+                reject(err);
+            });
+        });
     }
 
     public getGroups(): Group[] {
@@ -57,5 +88,3 @@ class Crawler{
         return this.DOM("img")[0].attribs.src;
     }
 }
-
-export default Crawler;
