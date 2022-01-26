@@ -13,7 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/rest": "^0.2.0-canary.0",
+    "@types/better-sqlite3": "^7.4.2",
     "axios": "^0.21.2",
+    "better-sqlite3": "^7.5.0",
     "cheerio": "^1.0.0-rc.10",
     "dayjs": "^1.10.7",
     "discord-api-types": "^0.26.1",
