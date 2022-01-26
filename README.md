@@ -9,3 +9,5 @@ src/config.json :
     "GUILDID": ["12345", ...]
 }
 ```
+
+**built for node v16.10.0**
