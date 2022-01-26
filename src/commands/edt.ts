@@ -2,10 +2,8 @@ import {Crawler, Group, SubGroup} from "../Crawler";
 import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, MessageSelectOptionData } from "discord.js";
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from '../index';
-import fs from 'fs';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import path from "path";
 import DB from "../DB";
 dayjs.extend(weekOfYear);
 
@@ -32,10 +30,11 @@ let obj : Command = {
 		.setDescription('Trouver ton emploi du temps ou l`emploi du temps de ton groupe.'),
 	async execute(interaction : CommandInteraction) {
 
-        var config = JSON.parse(fs.readFileSync(path.join(__dirname, "../config.json"), {encoding: "utf-8"}));
-
-        if(DB.getUser(interaction.user.id)){
-            //return interaction.reply({content: edtLink(JSON.parse(presenceCheck[0].subgroup).id), ephemeral: true});
+        let user = DB.getUser(interaction.user.id);
+        if(user !== undefined){
+            let group : Group = JSON.parse(user.filiere);
+            let subGroup : SubGroup = JSON.parse(user.groupe);
+            return interaction.reply({content: "Emploi du temps de la filière " + group.name + ", groupe " + subGroup.name + " : \n" + edtLink(subGroup.id)});
         }
 
         let crawler = await Crawler.newCrawler("https://edt.iut-orsay.fr/edt_invite.php");
