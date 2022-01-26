@@ -2,7 +2,6 @@ import cheerio, { CheerioAPI } from 'cheerio';
 import https from 'https';
 
 export interface userInfo {
-    id: string;
     group: string;
     subgroup: string;
 }

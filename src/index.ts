@@ -13,6 +13,9 @@ import { Routes } from 'discord-api-types/v9';
 
 //other
 import {FollowupFunctions} from './FollowupFunctions';
+import { DB } from './DB';
+new DB();
+
 
 export interface Command {
 	data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,

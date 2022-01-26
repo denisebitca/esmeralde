@@ -6,6 +6,7 @@ import fs from 'fs';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import path from "path";
+import DB from "../DB";
 dayjs.extend(weekOfYear);
 
 function edtLink(subGroupId?: SubGroup["id"]) : string{
@@ -33,12 +34,8 @@ let obj : Command = {
 
         var config = JSON.parse(fs.readFileSync(path.join(__dirname, "../config.json"), {encoding: "utf-8"}));
 
-        //@ts-ignore
-        let presenceCheck = config.userList.filter(user => user.id === interaction.user.id);
-        if(presenceCheck.length === 1){
-            //@ts-ignore
-            return interaction.reply({content: edtLink(JSON.parse(presenceCheck[0].subgroup).id), ephemeral: true});
-
+        if(DB.getUser(interaction.user.id)){
+            //return interaction.reply({content: edtLink(JSON.parse(presenceCheck[0].subgroup).id), ephemeral: true});
         }
 
         let crawler = await Crawler.newCrawler("https://edt.iut-orsay.fr/edt_invite.php");

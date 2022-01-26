@@ -3,19 +3,19 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from '../index';
 import fs from 'fs';
 import path from "path";
+import DB from "../DB";
 
 let obj : Command = {
 	data: new SlashCommandBuilder()
 		.setName('delconf')
 		.setDescription('Supprime la configuration de ton emploi du temps.'),
 	async execute(interaction : CommandInteraction) {
-        let config = JSON.parse(fs.readFileSync(path.join(__dirname, "../config.json"), {encoding: "utf-8"}));
-        //@ts-ignore
-        if(config.userList.filter(user => user.id === interaction.user.id).length === 1){
-            //@ts-ignore
-            config.userList = config.userList.filter(user => user.id !== interaction.user.id);
-            fs.writeFileSync(path.join(__dirname, "../config.json"), JSON.stringify(config, null, 2));
-            return interaction.reply({content:"Tu as bien supprimé ton emploi du temps.", ephemeral: true});
+        if(DB.checkIfUserExists(interaction.user.id)){
+            if(DB.removeUser(interaction.user.id)){
+                return interaction.reply({content:"Tu as bien supprimé ton emploi du temps.", ephemeral: true});
+            } else {
+                return interaction.reply({content:"Erreur avec la suppréssion de tes données ! Contacte denise#2798.", ephemeral: true});
+            }
         } else {
             return interaction.reply({content: "Tu n'es pas dans la liste des utilisateurs qui ont configuré leur emploi du temps.", ephemeral: true});
         }
