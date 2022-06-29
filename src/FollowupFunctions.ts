@@ -22,7 +22,6 @@ export class FollowupFunctions{
         let newCrawler : Crawler = await Crawler.newCrawler(Crawler.updateDOMUrl(newGroup));
         let subGroups : SubGroup[] = newCrawler.getSubGroups();
 
-        const row = new Discord.MessageActionRow();
         let options : Discord.MessageSelectOptionData[] = [];
 
         let list = [];
@@ -39,21 +38,40 @@ export class FollowupFunctions{
             list.push(newUser);
         }
 
-	console.log(subGroups);
-	console.log(options);
+        if(options.length > 24){
+            const row1 = new Discord.MessageActionRow();
+            const row2 = new Discord.MessageActionRow();
+            let options1 = options.slice(0, 24);
+            let options2 = options.slice(24, options.length);
+            const menu1 = new Discord.MessageSelectMenu();
+            menu1.setCustomId("select3");
+            menu1.setPlaceholder("Choisis ton groupe (1)");
+            menu1.setOptions(options1);
+            menu1.setMinValues(1);
+            menu1.setMaxValues(1);
+            row1.addComponents(menu1);
+            const menu2 = new Discord.MessageSelectMenu();
+            menu2.setCustomId("select4");
+            menu2.setPlaceholder("Choisis ton groupe (2)");
+            menu2.setOptions(options2);
+            menu2.setMinValues(1);
+            menu2.setMaxValues(1);
+            row2.addComponents(menu2);
+            fs.writeFileSync(path.join(__dirname, interaction.user.id + ".json"), JSON.stringify(list, null, 0)+"\n");
+            await interaction.update({content: "Maintenant choisis ton groupe !", embeds: [], components: [row1, row2]});
+        } else {
+            const menu = new Discord.MessageSelectMenu();
+            const row = new Discord.MessageActionRow();
+            menu.setCustomId("select3");
+            menu.setPlaceholder("Choisis ton groupe");
+            menu.setOptions(options);
+            menu.setMinValues(1);
+            menu.setMaxValues(1);
+            row.addComponents(menu);
+            fs.writeFileSync(path.join(__dirname, interaction.user.id + ".json"), JSON.stringify(list, null, 0)+"\n");
+            await interaction.update({content: "Maintenant choisis ton groupe !", embeds: [], components: [row]});
+        }
 
-        fs.writeFileSync(path.join(__dirname, interaction.user.id + ".json"), JSON.stringify(list, null, 0)+"\n");
-
-        const menu = new Discord.MessageSelectMenu();
-        menu.setCustomId("select3");
-        menu.setPlaceholder("Choisis ton groupe");
-        menu.setOptions(options);
-        menu.setMinValues(1);
-        menu.setMaxValues(1);
-
-        row.addComponents(menu);
-
-        await interaction.update({content: "Maintenant choisis ton groupe !", embeds: [], components: [row]});
     }
     public static async followUpActionMenu2_edt(interaction: Discord.SelectMenuInteraction){
         let choiceList : userInfo[] = JSON.parse(fs.readFileSync(path.join(__dirname, interaction.user.id + ".json"), "utf8"));

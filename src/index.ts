@@ -72,7 +72,7 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.isSelectMenu()){
 		if (interaction.customId === 'select' || interaction.customId === 'select2') {
 			FollowupFunctions.followUpActionMenu1_edt(interaction);
-		} else if (interaction.customId === 'select3') {
+		} else if (interaction.customId === 'select3' || interaction.customId === 'select4') {
 			FollowupFunctions.followUpActionMenu2_edt(interaction);
 		}
     } else if(interaction.isCommand()){
