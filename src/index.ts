@@ -66,6 +66,7 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('Ready!');
+	client.user?.setActivity('l\'IUT d\'Orsay', { type: 'WATCHING' });
 });
 
 client.on('interactionCreate', async interaction => {
