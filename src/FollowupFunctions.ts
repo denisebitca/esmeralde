@@ -39,6 +39,9 @@ export class FollowupFunctions{
             list.push(newUser);
         }
 
+	console.log(subGroups);
+	console.log(options);
+
         fs.writeFileSync(path.join(__dirname, interaction.user.id + ".json"), JSON.stringify(list, null, 0)+"\n");
 
         const menu = new Discord.MessageSelectMenu();
